@@ -4,22 +4,25 @@
 
 import 'dart:convert';
 
-DeviceTokenModel deviceTokenModelFromJson(String str) => DeviceTokenModel.fromJson(json.decode(str));
+DeviceTokenModel deviceTokenModelFromJson(String str) =>
+    DeviceTokenModel.fromJson(json.decode(str));
 
-String deviceTokenModelToJson(DeviceTokenModel data) => json.encode(data.toJson());
+String deviceTokenModelToJson(DeviceTokenModel data) =>
+    json.encode(data.toJson());
 
 class DeviceTokenModel {
-    DeviceTokenModel({
-        this.token,
-    });
+  DeviceTokenModel({
+    this.token,
+  });
 
-    String token;
+  String token;
 
-    factory DeviceTokenModel.fromJson(Map<String, dynamic> json) => DeviceTokenModel(
+  factory DeviceTokenModel.fromJson(Map<String, dynamic> json) =>
+      DeviceTokenModel(
         token: json["token"],
-    );
+      );
 
-    Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() => {
         "token": token,
-    };
+      };
 }

@@ -2,29 +2,36 @@ import 'package:flutter/material.dart';
 import 'package:oldisgold/models/usermodel.dart';
 import 'package:http/http.dart' as http;
 import 'package:oldisgold/screens/signup_page.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart' as DotEnv;
+import 'package:oldisgold/api/storage.dart';
+import 'dart:convert';
+import 'package:oldisgold/models/loginModel.dart';
 
 class TestMe extends StatefulWidget {
   @override
   _TestMeState createState() => _TestMeState();
 }
 
-Future<UserModel> createUser(String name, String jobTitle) async {
-  final String apiUrl = "https://reqres.in/api/users";
+final SecureStorage secureStorage = SecureStorage();
 
-  final response =
-      await http.post(Uri.parse(apiUrl), body: {"name": name, "job": jobTitle});
+Future<LoginModel> loginUser(String email, String password) async {
+  final String apiUrl = DotEnv.env['API'] + "auth/user/login";
 
-  if (response.statusCode == 201) {
+  final response = await http.post(Uri.parse(apiUrl), body: {
+    "email": email,
+    "password": password,
+  });
+
+  if (response.statusCode == 200) {
     final String responseString = response.body;
-
-    return userModelFromJson(responseString);
+    return loginModelFromJson(responseString);
   } else {
-    return null;
+    print("Error " + jsonDecode(response.body)['error']);
   }
 }
 
 class _TestMeState extends State<TestMe> {
-  UserModel _user;
+  LoginModel _user;
   final TextEditingController emailcontroller = TextEditingController();
 
   final TextEditingController passwordcontroller = TextEditingController();
@@ -110,11 +117,12 @@ class _TestMeState extends State<TestMe> {
                         final String email = emailcontroller.text;
                         final String password = passwordcontroller.text;
 
-                        final UserModel user =
-                            await createUser(email, password);
+                        final LoginModel user =
+                            await loginUser(email, password);
                         setState(() {
                           _user = user;
                         });
+                        secureStorage.writeSecureData('token', _user.token);
                         if (_user != null) print(_user);
                       },
                       child: Text(
@@ -124,11 +132,11 @@ class _TestMeState extends State<TestMe> {
                     ),
                   ),
                   decoration: BoxDecoration(
-                      color: Color(0XFFFF27B0),
+                      color: Colors.blue,
                       borderRadius: BorderRadius.circular(100.0),
                       boxShadow: [
                         BoxShadow(
-                            color: Color(0XFFFF27B0),
+                            color: Colors.blue,
                             offset: Offset(6, 2),
                             blurRadius: 1.0,
                             spreadRadius: 2.0),
@@ -151,7 +159,7 @@ class _TestMeState extends State<TestMe> {
           _user == null
               ? Container()
               : Text(
-                  "The user ${_user.name}, ${_user.id} is created successfully at time ${_user.createdAt.toIso8601String()}"),
+                  "The user ${_user}, ${_user} is created successfully at }"),
         ],
       ),
     ));

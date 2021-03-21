@@ -17,8 +17,9 @@ class TokenPage extends StatefulWidget {
 String thistoken;
 Future<DeviceTokenModel> registerDevice(String token) async {
   final SecureStorage secureStorage = SecureStorage();
-  final String apiUrl = DotEnv.env['API'] + "device/register";
+
   final String tokenID = await secureStorage.readSecureData('token');
+  final String apiUrl = DotEnv.env['API'] + "device/register";
   final response = await http.post(Uri.parse(apiUrl),
       body: {"token": token}, headers: {"Authorization": "Bearer " + tokenID});
 
@@ -31,6 +32,7 @@ Future<DeviceTokenModel> registerDevice(String token) async {
 }
 
 class _TokenPageState extends State<TokenPage> {
+  final TextEditingController tokencontroller = TextEditingController();
   @override
   void initState() {
     secureStorage.readSecureData('token').then((value) => {thistoken = value});
@@ -41,7 +43,6 @@ class _TokenPageState extends State<TokenPage> {
 
   @override
   Widget build(BuildContext context) {
-    final TextEditingController tokencontroller = TextEditingController();
     return Scaffold(
       body: Center(
         child: Column(
@@ -93,12 +94,12 @@ class _TokenPageState extends State<TokenPage> {
                             _token = token;
                           });
                           print(secureStorage.readSecureData('token'));
-                        },
-                        // Navigator.push(
-                        //     context,
-                        //     MaterialPageRoute(
-                        //         builder: (context) => UserPersonalDetails()));
 
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => UserPersonalDetails()));
+                        },
                         child: Text(
                           "Next",
                           style: TextStyle(color: Colors.white, fontSize: 16.0),

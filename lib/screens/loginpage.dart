@@ -1,9 +1,18 @@
 import 'package:flutter/material.dart';
+
 import 'package:oldisgold/screens/homepage.dart';
+import 'package:oldisgold/screens/startscreen.dart';
 import 'package:oldisgold/screens/testing_https.dart';
+
+import 'package:http/http.dart' as http;
 // import 'package:oldisgold/screens/testing_https2.dart';
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
+  @override
+  _LoginPageState createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -19,7 +28,7 @@ class LoginPage extends StatelessWidget {
               ),
             ),
             // SizedBox(height: 20.0),
-        
+
             GestureDetector(
               onTap: () {
                 Navigator.push(context,
@@ -55,8 +64,8 @@ class LoginPage extends StatelessWidget {
             ),
             GestureDetector(
               onTap: () {
-                Navigator.push(
-                    context, MaterialPageRoute(builder: (context) => TestMe()));
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => Starting()));
               },
               child: Container(
                 child: Row(
